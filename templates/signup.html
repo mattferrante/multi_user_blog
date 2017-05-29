@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>Create a New Account</h2>
+  <form method="post">
+    <div class="form-group">
+      <label>User Name</label>
+        <input class="form-control" type="text" name="username" value="{{username}}">
+          <span>{{error_username}}</span>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+        <input class="form-control" type="password" name="password">
+          <span>{{error_password}}</span>
+    </div>
+    <div class="form-group">
+      <label>verify password</label>
+        <input class="form-control" type="password" name="verify">
+          <span>{{error_verify}}</span>
+    </div>
+    <div class="form-group">
+      <label>email</label>
+        <input class="form-control" type="text" name="email" value="{{email}}">
+          <span>{{error_email}}</span>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+
+  </form>
+
+{% endblock %}

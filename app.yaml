@@ -1,0 +1,15 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+application: mf0280-blog
+
+handlers:
+- url: /assets
+  static_dir: assets
+
+- url: /.*
+  script: blog.app
+
+libraries:
+- name: jinja2
+  version: latest
