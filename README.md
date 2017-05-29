@@ -22,5 +22,4 @@ Site should run in any modern browser
 You can:
 1. Download the zip file of the branch master to your computer.  Once the file is downloaded you decompress the folder and start the Google App Engine Launcher software, add an existing application and point it to the file that you just unzipped.
 
-
- 
+2. You can open http://dauntless-glow-169223.appspot.com/ in your web browser.
