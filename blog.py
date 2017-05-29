@@ -128,7 +128,7 @@ class Post(db.Model):
     last_modified = db.DateTimeProperty(auto_now = True)
     user_id = db.StringProperty(required = True)
     likes = db.StringListProperty()
-    parent_post = db.StringProperty()
+    parent = db.StringProperty()
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -138,7 +138,7 @@ class Post(db.Model):
 
 class BlogFront(BlogHandler):
     def get(self):
-        posts = Post.all().filter('parent_post =', None).order('-created')
+        posts = Post.all().filter('parent =', None).order('-created')
         uid = self.read_secure_cookie('user_id')
 
         self.render('front.html', posts = posts, uid=uid)
@@ -153,7 +153,7 @@ class PostPage(BlogHandler):
         uid = self.read_secure_cookie('user_id')
 
         if post.likes and uid in post.likes:
-            likeText = 'unlike'
+            likeText = 'Unlike'
         elif uid == None:
             likeText = 'Login or sign up to like'
         else:
@@ -161,8 +161,7 @@ class PostPage(BlogHandler):
 
         totalLikes = len(post.likes)
 
-        comments = Post.all().filter('parent_post =', post_id)
-
+        comments = Post.all().filter('parent =', post_id)
 
         for comment in comments:
             print(comments)
@@ -188,7 +187,7 @@ class PostPage(BlogHandler):
 
         if subject and content:
             post = Post(parent = blog_key(), subject = subject, 
-                        content = content, user_id = uid, parent_post = post_id)
+                        content = content, user_id = uid, parent = post_id)
             post.put()
             self.redirect('/post/%s' % post_id)
         else:
@@ -279,8 +278,8 @@ class EditPage(BlogHandler):
             post.subject = subject
             post.content = content
             post.put()
-            if post.parent_post:
-                redirect_id = post.parent_post
+            if post.parent:
+                redirect_id = post.parent
             else:
                 redirect_id = post.key().id()
             self.redirect('/post/%s' % str(redirect_id))
@@ -293,13 +292,7 @@ class EditPage(BlogHandler):
 class NewPost(BlogHandler):
     def get(self):
         uid = self.read_secure_cookie('user_id')
-        # if self.user.email == "brucewpaul@gmail.com":
-        #     self.render("newpost.html",  uid=uid)
-        # elif self.user:
         if self.user:
-            # error = "you do not have permission to create a post, but you may comment on existing posts"
-            # posts = Post.all().filter('parent_post =', None).order('-created')
-            # self.render('front.html', posts = posts, uid=uid, error=error)
             self.render("newpost.html",  uid=uid)
         else:
             self.redirect("/login")
@@ -429,10 +422,10 @@ class Welcome(BlogHandler):
 #---------------------------------site index------------------------------------
 
 app = webapp2.WSGIApplication([('/?', BlogFront),
-                               ('/post/([0-9]+)', PostPage),
-                               ('/delete/([0-9]+)', DeletePage),
-                               ('/edit/([0-9]+)', EditPage),
-                               ('/like/([0-9]+)', LikePage),
+                               ('/post/([0-19]+)', PostPage),
+                               ('/delete/([0-19]+)', DeletePage),
+                               ('/edit/([0-19]+)', EditPage),
+                               ('/like/([0-19]+)', LikePage),
                                ('/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
